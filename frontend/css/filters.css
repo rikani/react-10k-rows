@@ -1,0 +1,27 @@
+.filters {
+}
+
+.filters__header {
+  margin: 0 0 20px;
+}
+
+.filters__item {}
+
+.filters__item-label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.filters__item-input {
+  display: block;
+  width: 100%;
+  padding: .375rem .75rem;
+  box-sizing: border-box;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+}

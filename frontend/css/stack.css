@@ -1,0 +1,50 @@
+.stack {}
+.stack__list {}
+
+.stack__header {
+  display: flex;
+  height: 50px;
+  align-items: center;
+  border-top: 1px solid #dadce0;
+  border-bottom: 1px solid #dadce0;
+  box-sizing: border-box;
+}
+
+.stack__body {
+  position: relative;
+}
+
+.stack__row {
+  display: flex;
+  height: 40px;
+  align-items: center;
+  border-bottom: 1px solid #dadce0;
+  box-sizing: border-box;
+}
+
+.stack__row:nth-child(2n) {
+  background-color: #f1f1f1;
+}
+
+.stack__column {
+  margin: 0 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stack__column_tiny {
+  flex: 0 1 60px;
+}
+
+.stack__column_medium {
+  flex: 0 1 150px;
+}
+
+.stack__column_large {
+  flex: 0 1 200px;
+}
+
+.stack__column_head {
+  font-weight: 700;
+}

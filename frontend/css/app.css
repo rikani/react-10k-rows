@@ -1,0 +1,24 @@
+.app {}
+
+.app__header {
+  background-color: #343a40;
+}
+
+.app__body {
+  display: flex;
+}
+
+.app__aside {
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: 200px;
+  padding: 20px 30px;
+  background-color: #f1f1f1;
+}
+
+.app__main {
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 500px;
+  padding: 20px 30px;
+}
