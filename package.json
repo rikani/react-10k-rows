@@ -1,0 +1,44 @@
+{
+  "name": "react-10k-rows",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "devServer": "nodemon ./backend/server.js",
+    "prodServer": "npm run build && node ./backend/server.js -p",
+    "build": "rm -rf dist && webpack --config webpack.prod.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rikani/react-10k-rows.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rikani/react-10k-rows/issues"
+  },
+  "homepage": "https://github.com/rikani/react-10k-rows#readme",
+  "dependencies": {
+    "@babel/core": "^7.4.4",
+    "express": "^4.16.4"
+  },
+  "devDependencies": {
+    "babel-loader": "^8.0.6",
+    "css-loader": "^2.1.1",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.6.0",
+    "minimist": "^1.2.0",
+    "nodemon": "^1.19.0",
+    "postcss-calc": "^7.0.1",
+    "postcss-import": "^12.0.1",
+    "postcss-loader": "^3.0.0",
+    "postcss-nested": "^4.1.2",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.31.0",
+    "webpack-dev-middleware": "^3.6.2",
+    "webpack-hot-middleware": "^2.24.4",
+    "webpack-merge": "^4.2.1"
+  }
+}
