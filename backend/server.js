@@ -18,9 +18,6 @@ if (argv.p) {
 
 var app = express();
 
-// view setup
-// app.set('views', path.join(__dirname, 'views'));
-
 if (!argv.p) {
     var compiler = webpack(config);
     
@@ -33,7 +30,7 @@ if (!argv.p) {
 }
 
 // static assets
-app.use(express.static(path.join(__dirname, 'dist')));
+app.use(express.static('dist'));
 
 app.use('/api/data', dataRouter);
 app.get('/', (req, res) =>
