@@ -8,12 +8,16 @@ export default class Stack extends React.Component {
   constructor(props) {
     super(props)
 
+    this.table = React.createRef()
+    this.header = React.createRef()
     this.body = React.createRef()
     this.windowHeight = null
     this.rowsInPage = 0
 
     this.state = {
       list: [],
+      tableRect: { left: 0, width: 0 },
+      stikyHeader: false,
       length: 0,
       rowsInPage: 0,
       offset: 0
@@ -36,6 +40,7 @@ export default class Stack extends React.Component {
         }, () => {
           this.updateStackParams()
           this.updateBodySize()
+          this.updateTableSize()
         })
       })
   }
@@ -49,6 +54,17 @@ export default class Stack extends React.Component {
       return true
     }
 
+    if ( this.state.stikyHeader !== nextState.stikyHeader ) {
+      return true
+    }
+
+    const { left: currentLeft, width: currentWidth } = this.state.tableRect
+    const { left: nextLeft, width: nextWidth } = nextState.tableRect
+
+    if ( currentLeft !== nextLeft || currentWidth !== nextWidth ) {
+      return true
+    }
+
     return false
   }
 
@@ -59,9 +75,17 @@ export default class Stack extends React.Component {
   }
 
   render() {
+    let headerStyles = null
+    const stackCls = classnames('stack', {
+      'stack_stiky-header': this.state.stikyHeader
+    })
+    if (this.state.stikyHeader) {
+      const { left, width } = this.state.tableRect
+      headerStyles = { left, width }
+    }
     return (
-      <div className="stack" role="table">
-        <div className="stack__header" role="row">
+      <div className={stackCls} role="table" ref={this.table}>
+        <div className="stack__header" role="row" ref={this.header} style={headerStyles}>
           <div className="stack__column stack__column_head stack__column_tiny" role="columnheader">ID</div>
           <div className="stack__column stack__column_head stack__column_medium" role="columnheader">First Name</div>
           <div className="stack__column stack__column_head stack__column_medium" role="columnheader">Last Name</div>
@@ -111,13 +135,37 @@ export default class Stack extends React.Component {
   }
 
   onWindowResize() {
+    this.updateTableSize()
     this.updateWindowSize()
     this.updateStackParams()
   }
 
   onWindowScroll() {
+    this.updateHeaderPosition()
     this.setScrolling()
     this.updateOffset()
+  }
+
+  updateTableSize() {
+    const { left, width } = this.table.current.getBoundingClientRect()
+    const { left: currentLeft, width: currentWidth } = this.state.tableRect
+
+    if (currentLeft !== left || currentWidth !== width ) {
+      this.setState({
+        tableRect: { left, width },
+      })
+    }
+  }
+
+  updateHeaderPosition() {
+    const { top } = this.table.current.getBoundingClientRect()
+    const newStikyState = top <= 1
+
+    if ( this.state.stikyHeader !== newStikyState ) {
+      this.setState({
+        stikyHeader: newStikyState,
+      })
+    }
   }
 
   setScrolling() {
