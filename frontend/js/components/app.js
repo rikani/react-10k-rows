@@ -13,7 +13,7 @@ const App = () => (
         <Filters />
       </aside>
       <section className="app__main">
-        <Stack />
+        <Stack height={40} />
       </section>
     </div>
   </div>

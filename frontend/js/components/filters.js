@@ -4,7 +4,7 @@ const Filters = () => (
   <div className="filters">
     <h2 className="filters__header">Filters</h2>
     <div className="filters__item">
-      <label className="filters__item-label" for="first-name">First Name:</label>
+      <label className="filters__item-label" htmlFor="first-name">First Name:</label>
       <div className="filters__item-field">
         <input type="text" className="filters__item-input" id="first-name" />
       </div>
