@@ -3,6 +3,7 @@ import axios from 'axios'
 import classnames from 'classnames'
 import { connect } from 'react-redux'
 
+const STACK_STICKY_CLASS = 'stack_sticky-header'
 const BODY_SCROLLING_CLASS = 'stack__body_scrolling'
 
 class Stack extends React.Component {
@@ -17,8 +18,6 @@ class Stack extends React.Component {
 
     this.state = {
       list: [],
-      tableRect: { left: 0, width: 0 },
-      stikyHeader: false,
       length: 0,
       rowsInPage: 0,
       offset: 0
@@ -41,7 +40,6 @@ class Stack extends React.Component {
         }, () => {
           this.updateStackParams()
           this.updateBodySize(this.state.length)
-          this.updateTableSize()
         })
       })
   }
@@ -59,17 +57,6 @@ class Stack extends React.Component {
       return true
     }
 
-    if ( this.state.stikyHeader !== nextState.stikyHeader ) {
-      return true
-    }
-
-    const { left: currentLeft, width: currentWidth } = this.state.tableRect
-    const { left: nextLeft, width: nextWidth } = nextState.tableRect
-
-    if ( currentLeft !== nextLeft || currentWidth !== nextWidth ) {
-      return true
-    }
-
     return false
   }
 
@@ -80,19 +67,9 @@ class Stack extends React.Component {
   }
 
   render() {
-    let headerStyles = null
-    const stackCls = classnames('stack', {
-      'stack_stiky-header': this.state.stikyHeader
-    })
-
-    if (this.state.stikyHeader) {
-      const { left, width } = this.state.tableRect
-      headerStyles = { left, width }
-    }
-
     return (
-      <div className={stackCls} role="table" ref={this.table}>
-        <div className="stack__header" role="row" ref={this.header} style={headerStyles}>
+      <div className="stack" role="table" ref={this.table}>
+        <div className="stack__header" role="row" ref={this.header}>
           <div className="stack__column stack__column_head stack__column_tiny" role="columnheader">ID</div>
           <div className="stack__column stack__column_head stack__column_medium" role="columnheader">First Name</div>
           <div className="stack__column stack__column_head stack__column_medium" role="columnheader">Last Name</div>
@@ -146,36 +123,28 @@ class Stack extends React.Component {
   }
 
   onWindowResize() {
-    this.updateTableSize()
     this.updateWindowSize()
     this.updateStackParams()
   }
 
   onWindowScroll() {
-    this.updateHeaderPosition()
+    this.toggleStickyMode()
     this.setScrolling()
     this.updateOffset()
   }
 
-  updateTableSize() {
-    const { left, width } = this.table.current.getBoundingClientRect()
-    const { left: currentLeft, width: currentWidth } = this.state.tableRect
-
-    if (currentLeft !== left || currentWidth !== width ) {
-      this.setState({
-        tableRect: { left, width },
-      })
-    }
-  }
-
-  updateHeaderPosition() {
+  toggleStickyMode() {
     const { top } = this.table.current.getBoundingClientRect()
-    const newStikyState = top <= 1
+    const { left, width } = this.table.current.getBoundingClientRect()
 
-    if ( this.state.stikyHeader !== newStikyState ) {
-      this.setState({
-        stikyHeader: newStikyState,
-      })
+    if (top <= 1) {
+      this.table.current.classList.add(STACK_STICKY_CLASS)
+      this.header.current.style.left = `${left}px`
+      this.header.current.style.width = `${width}px`
+    } else {
+      this.table.current.classList.remove(STACK_STICKY_CLASS)
+      this.header.current.style.left = ''
+      this.header.current.style.width = ''
     }
   }
 

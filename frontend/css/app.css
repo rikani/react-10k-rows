@@ -9,7 +9,22 @@
   min-height: calc(100vh - 80px);
 }
 
+.app__body_sticky {
+  .app__aside {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 200px;
+  }
+
+  .app__main {
+    margin-left: 260px;
+  }
+}
+
 .app__aside {
+  position: relative;
   flex-grow: 0;
   flex-shrink: 1;
   flex-basis: 200px;
