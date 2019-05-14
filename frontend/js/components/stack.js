@@ -1,10 +1,11 @@
 import React from 'react'
 import axios from 'axios'
 import classnames from 'classnames'
+import { connect } from 'react-redux'
 
 const BODY_SCROLLING_CLASS = 'stack__body_scrolling'
 
-export default class Stack extends React.Component {
+class Stack extends React.Component {
   constructor(props) {
     super(props)
 
@@ -39,13 +40,17 @@ export default class Stack extends React.Component {
           length: res.data.length
         }, () => {
           this.updateStackParams()
-          this.updateBodySize()
+          this.updateBodySize(this.state.length)
           this.updateTableSize()
         })
       })
   }
 
   shouldComponentUpdate(nextProps, nextState) {
+    if (this.props.firstName !== nextProps.firstName) {
+      return true
+    }
+
     if (this.state.rowsInPage !== nextState.rowsInPage) {
       return true
     }
@@ -79,10 +84,12 @@ export default class Stack extends React.Component {
     const stackCls = classnames('stack', {
       'stack_stiky-header': this.state.stikyHeader
     })
+
     if (this.state.stikyHeader) {
       const { left, width } = this.state.tableRect
       headerStyles = { left, width }
     }
+
     return (
       <div className={stackCls} role="table" ref={this.table}>
         <div className="stack__header" role="row" ref={this.header} style={headerStyles}>
@@ -90,7 +97,7 @@ export default class Stack extends React.Component {
           <div className="stack__column stack__column_head stack__column_medium" role="columnheader">First Name</div>
           <div className="stack__column stack__column_head stack__column_medium" role="columnheader">Last Name</div>
           <div className="stack__column stack__column_head stack__column_large" role="columnheader">Email</div>
-          <div className="stack__column stack__column_head stack__column_medium" role="columnheader">Gender</div>
+          <div className="stack__column stack__column_head stack__column_tiny" role="columnheader">Gender</div>
           <div className="stack__column stack__column_head stack__column_medium" role="columnheader">IP Address</div>
         </div>
         <div className="stack__body" role="rowgroup" ref={this.body}>
@@ -109,16 +116,20 @@ export default class Stack extends React.Component {
   }
 
   renderRows() {
-    const visibleRows = this.state.list.slice(this.state.offset, this.state.rowsInPage + this.state.offset)
+    const { offset, list } = this.state
+    const { height } = this.props
+    const filteredRows = this.getFilteredRows(list)
+    const visibleRows = this.getVisibleRows(filteredRows)
+    this.updateBodySize(filteredRows.length)
     
     return (
       visibleRows.map( ({ id, first_name, last_name, email, gender, ip_address}, index) => {
-        const rowNumber = index + this.state.offset;
+        const rowNumber = index + offset;
         const rowCls = classnames('stack__row', {
           'stack__row_even': rowNumber % 2 !== 0
         });
         const rowStayle = {
-          top: `${(index + this.state.offset) * this.props.height}px`
+          top: `${(index + offset) * height}px`
         };
         return (
           <div key={id} className={rowCls} role="row" style={rowStayle}>
@@ -126,7 +137,7 @@ export default class Stack extends React.Component {
             <div className="stack__column stack__column_medium" title={first_name} role="cell">{first_name}</div>
             <div className="stack__column stack__column_medium" title={last_name} role="cell">{last_name}</div>
             <div className="stack__column stack__column_large" title={email} role="cell">{email}</div>
-            <div className="stack__column stack__column_medium" title={gender} role="cell">{gender}</div>
+            <div className="stack__column stack__column_tiny" title={gender} role="cell">{gender}</div>
             <div className="stack__column stack__column_medium" title={ip_address} role="cell">{ip_address}</div>
           </div>
         )
@@ -168,6 +179,18 @@ export default class Stack extends React.Component {
     }
   }
 
+  getFilteredRows(list) {
+    const { firstName } = this.props
+
+    return list.filter( ({ first_name }) => first_name.toLowerCase().indexOf(firstName.toLowerCase()) > -1)
+  }
+
+  getVisibleRows(list) {
+    const { offset, rowsInPage } = this.state
+
+    return list.slice(offset, rowsInPage + offset)
+  }
+
   setScrolling() {
     this.body.current.classList.add(BODY_SCROLLING_CLASS)
     if (this.to) {
@@ -197,8 +220,8 @@ export default class Stack extends React.Component {
     }
   }
 
-  updateBodySize() {
-    this.body.current.style.height = `${this.state.length * this.props.height}px`;
+  updateBodySize(length) {
+    this.body.current.style.height = `${length * this.props.height}px`;
   }
 
   updateWindowSize() {
@@ -211,3 +234,7 @@ export default class Stack extends React.Component {
     })
   }
 }
+
+const mapStateToProps = state => ({ firstName: state })
+
+export default connect(mapStateToProps)(Stack)

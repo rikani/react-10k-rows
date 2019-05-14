@@ -41,6 +41,8 @@
     "postcss-nested": "^4.1.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-redux": "^7.0.3",
+    "redux": "^4.0.1",
     "style-loader": "^0.23.1",
     "webpack": "^4.31.0",
     "webpack-dev-middleware": "^3.6.2",
