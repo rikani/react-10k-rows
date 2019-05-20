@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 const STACK_STICKY_CLASS = 'stack_sticky-header'
 const BODY_SCROLLING_CLASS = 'stack__body_scrolling'
 
-class Stack extends React.Component {
+class Stack extends React.PureComponent {
   constructor(props) {
     super(props)
 
@@ -44,29 +44,13 @@ class Stack extends React.Component {
       })
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    if (this.props.firstName !== nextProps.firstName) {
-      return true
-    }
-
-    if (this.state.rowsInPage !== nextState.rowsInPage) {
-      return true
-    }
-
-    if (this.state.offset !== nextState.offset) {
-      return true
-    }
-
-    return false
-  }
-
-
   componentWillUnmount() {
     window.removeEventListener('resize', this.onWindowResize)
     window.removeEventListener('scroll', this.onWindowScroll)
   }
 
   render() {
+    console.log('render')
     return (
       <div className="stack" role="table" ref={this.table}>
         <div className="stack__header" role="row" ref={this.header}>
